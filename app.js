@@ -81,10 +81,17 @@ function xyBriToRgb(cle){
 var ladoorstate = '';
 function fdoorstate() {
     setInterval(function(){
-        
         doorstate = zigbee.getsensorstate(zigbeehost, sensortypetonum('open'));
         if (ladoorstate != doorstate){
             ladoorstate = doorstate;
+            if(doorstate == true){
+                zigbee.lighton(zigbeehost, 2);
+                zigbee.changebuttonstate(zigbeehost,sensortypetonum('buttonevent'), true)
+            }
+            if(doorstate == false){
+                zigbee.lightoff(zigbeehost, 2);
+                zigbee.changebuttonstate(zigbeehost,sensortypetonum('buttonevent'), false)
+            }
             let cin_path = conf.ae.parent+'/zigbee_smarthome/deviceDoorLock/doorlock';
             let cin_obj = {
                 "hd:dooLk": {
@@ -99,7 +106,6 @@ function fdoorstate() {
 var ladoorbatlvl = '';
 function fdoorbat() {
     setInterval(() => {
-        
         doorbatlvl = zigbee.getsensorbatt(zigbeehost, sensortypetonum('open'));
         if (ladoorbatlvl != doorbatlvl){
             ladoorbatlvl = doorbatlvl;
@@ -118,7 +124,6 @@ function fdoorbat() {
 var latemperval = '';
 function ftempval(){
     setInterval(function(){
-        
         temperval = zigbee.getsensorstate(zigbeehost, sensortypetonum('temperature'));
         if (latemperval != temperval){
             latemperval = temperval;
@@ -136,7 +141,6 @@ function ftempval(){
 var latemperbatt = '';
 function ftempbatt(){
     setInterval(function(){
-        
         temperbatt = zigbee.getsensorbatt(zigbeehost, sensortypetonum('temperature'));
         if (latemperbatt != temperbatt){
             latemperbatt = temperbatt;
@@ -154,11 +158,9 @@ function ftempbatt(){
 var laswstate='';
 function fswstate() {
     setInterval(function(){
-        
         swstate = zigbee.getsensorstate(zigbeehost, sensortypetonum('buttonevent'));
         if (laswstate != swstate){
             laswstate = swstate;
-            console.log("==============================="+swstate)
             if(swstate == true){
                 zigbee.lighton(zigbeehost, 2, true);
             }
@@ -179,7 +181,6 @@ function fswstate() {
 var lalight_fault='';
 function flight_fault() {
     setInterval(function(){
-        
         light_fault = zigbee.findlight(zigbeehost, lightNUM, 'reachable');
         if (lalight_fault != light_fault){
             lalight_fault = light_fault;
@@ -197,7 +198,6 @@ function flight_fault() {
 var lalight_sat='';
 function flight_sat() {
     setInterval(function(){
-        
         light_sat =  zigbee.findlight(zigbeehost, lightNUM, 'sat');
         if (lalight_sat != light_sat){
             lalight_sat = light_sat;
@@ -217,7 +217,6 @@ var lared='';
         var lablue='';
 function flight_rgb() {
     setInterval(function(){
-        
         red = xyBriToRgb('red');
         green = xyBriToRgb('green');
         blue = xyBriToRgb('blue');
@@ -241,7 +240,6 @@ function flight_rgb() {
 var lalight_bri='';
 function flight_bri() {
     setInterval(function(){
-        
         light_bri = zigbee.findlight(zigbeehost, lightNUM, 'bri')
         if (lalight_bri != light_bri){
             lalight_bri = light_bri;

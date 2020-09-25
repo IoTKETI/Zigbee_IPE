@@ -115,7 +115,41 @@ exports.getsensorstate = function(zigbeehost, sensorNUM){
     }
     return obj;
 }
-
+exports.changebuttonstate = function(zigbeehost, sensorNUM, swstate){
+  var data = null;
+  let button_on ={
+    "buttonevent": 1002
+  }
+  let button_off ={
+    "buttonevent": 1004
+  }
+    try {
+        var url = 'http://'+zigbeehost+'/api/'+api_key+'/sensors/'+sensorNUM+'/state';
+        // console.log('PUT -> ' + url);
+        if (swstate == true){
+          var resp = request('PUT', url,{
+            'body': JSON.stringify(button_on)
+          });
+        }
+        if (swstate == false){
+          var resp = request('PUT', url,{
+            'body': JSON.stringify(button_off)
+          });
+        } 
+        // var status_code = resp.statusCode;
+        try {
+            data = String(resp.getBody());
+        } catch (err) {
+            adata = String(err.body);
+            console.error(err);
+        }
+        // console.log(status_code);
+        var obj = JSON.parse(data);
+    } catch (exp) {
+        console.error(exp);
+    }
+    return obj;
+}
 exports.lighton = function(zigbeehost, lightNUM){
   var data = null;
   let control ={
@@ -127,14 +161,14 @@ exports.lighton = function(zigbeehost, lightNUM){
         var resp = request('PUT', url,{
           'body': JSON.stringify(control)
         });
-        var status_code = resp.statusCode;
+        // var status_code = resp.statusCode;
         try {
             data = String(resp.getBody());
         } catch (err) {
             adata = String(err.body);
             console.error(err);
         }
-        console.log(status_code);
+        // console.log(status_code);
         var obj = JSON.parse(data);
     } catch (exp) {
         console.error(exp);
@@ -152,14 +186,14 @@ exports.lightoff = function(zigbeehost, lightNUM){
         var resp = request('PUT', url,{
           'body': JSON.stringify(control)
         });
-        var status_code = resp.statusCode;
+        // var status_code = resp.statusCode;
         try {
             data = String(resp.getBody());
         } catch (err) {
             adata = String(err.body);
             console.error(err);
         }
-        console.log(status_code);
+        // console.log(status_code);
         var obj = JSON.parse(data);
     } catch (exp) {
         console.error(exp);
