@@ -1,17 +1,11 @@
 var conf = {};
 var cse = {};
 var ae = {};
-var lora = {};
-var health = {};
 
 //cse config
-// cse.host = "203.253.128.161";
 cse.host = "127.0.0.1";
-// cse.port = "7579";
 cse.port = "7599"
-// cse.name = "Mobius";
 cse.name = "wdc_base"
-// cse.id = "/Mobius2";
 cse.id = "wdc_base"
 cse.mqttport = "1883";
 
@@ -21,13 +15,7 @@ ae.id = "S" + ae.name;
 ae.parent = "/" + cse.name;
 ae.appid = "zigbee"
 
-// //health config
-// health.ae = "";
-// health.cnt = "";
-
 conf.cse = cse;
 conf.ae = ae;
-conf.lora = lora;
-conf.health = health;
 
 module.exports = conf;
