@@ -1,11 +1,12 @@
 var http = require("http");
 var request = require("sync-request");
-var api_key = '16C4BC05B6'
+
+global.conf = require('./conf.js');
 
 exports.findlight = function(zigbeehost, lightNUM, findval){
   var data = null;
   try {
-      var url = 'http://' + zigbeehost + '/api/'+api_key+'/lights/'+lightNUM;
+      var url = 'http://' + zigbeehost + '/api/'+conf.zigbee.api_key+'/lights/'+lightNUM;
       // console.log('GET -> ' + url);
       var resp = request('GET', url);
       // var status_code = resp.statusCode;
@@ -43,7 +44,7 @@ exports.findlight = function(zigbeehost, lightNUM, findval){
 exports.getsensorbatt = function(zigbeehost, sensorNUM){
   var data = null;
     try {
-        var url = 'http://'+zigbeehost+'/api/'+api_key+'/sensors/'+sensorNUM;
+        var url = 'http://'+zigbeehost+'/api/'+conf.zigbee.api_key+'/sensors/'+sensorNUM;
         // console.log('GET -> ' + url);
         var resp = request('GET', url);
         // var status_code = resp.statusCode;
@@ -66,7 +67,7 @@ exports.getsensorbatt = function(zigbeehost, sensorNUM){
 exports.getsensorstate = function(zigbeehost, sensorNUM){
   var data = null;
     try {
-        var url = 'http://'+zigbeehost+'/api/'+api_key+'/sensors/'+sensorNUM;
+        var url = 'http://'+zigbeehost+'/api/'+conf.zigbee.api_key+'/sensors/'+sensorNUM;
         // console.log('GET -> ' + url);
         var resp = request('GET', url, {});
         // var status_code = resp.statusCode;
@@ -124,7 +125,7 @@ exports.changebuttonstate = function(zigbeehost, sensorNUM, swstate){
     "buttonevent": 1004
   }
     try {
-        var url = 'http://'+zigbeehost+'/api/'+api_key+'/sensors/'+sensorNUM+'/state';
+        var url = 'http://'+zigbeehost+'/api/'+conf.zigbee.api_key+'/sensors/'+sensorNUM+'/state';
         // console.log('PUT -> ' + url);
         if (swstate == true){
           var resp = request('PUT', url,{
@@ -156,7 +157,7 @@ exports.lighton = function(zigbeehost, lightNUM){
     "on" : true
   }
     try {
-        var url = 'http://'+zigbeehost+'/api/'+api_key+'/lights/'+lightNUM+'/state';
+        var url = 'http://'+zigbeehost+'/api/'+conf.zigbee.api_key+'/lights/'+lightNUM+'/state';
         // console.log('PUT -> ' + url);
         var resp = request('PUT', url,{
           'body': JSON.stringify(control)
@@ -181,7 +182,7 @@ exports.lightoff = function(zigbeehost, lightNUM){
     "on" : false
   }
     try {
-        var url = 'http://'+zigbeehost+'/api/'+api_key+'/lights/'+lightNUM+'/state';
+        var url = 'http://'+zigbeehost+'/api/'+conf.zigbee.api_key+'/lights/'+lightNUM+'/state';
         // console.log('PUT -> ' + url);
         var resp = request('PUT', url,{
           'body': JSON.stringify(control)
@@ -212,7 +213,7 @@ exports.changelightcolor = function(zigbeehost, lightNUM, xvalue, yvalue){
   const options = {
     hostname: zigbeehost,
     port: 80,
-    path: '/api/'+api_key+'/lights/'+lightNUM+'/state',
+    path: '/api/'+conf.zigbee.api_key+'/lights/'+lightNUM+'/state',
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
@@ -249,7 +250,7 @@ exports.emergencyalert = function(zigbeehost, lightNUM){
   const options = {
     hostname: zigbeehost,
     port: 80,
-    path: '/api/'+api_key+'/lights/'+lightNUM+'/state',
+    path: '/api/'+conf.zigbee.api_key+'/lights/'+lightNUM+'/state',
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
