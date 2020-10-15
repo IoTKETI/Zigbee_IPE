@@ -12,7 +12,7 @@ cse.id = "/wdc_base"
 cse.mqttport = "1883";
 
 //ae config
-ae.name = "zigbee_smart";
+ae.name = "zigbee_smarthome";
 ae.id = "S" + ae.name;
 ae.parent = "/" + cse.name;
 ae.appid = "zigbee"

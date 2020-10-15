@@ -1,12 +1,18 @@
+const conf = require('./conf');
 var zigbee = require('./zigbeeIPE');
 
 global.conf = require('./conf.js');
+var ipe_ip = require('ip');
+var express = require('express');
+var bodyParser = require('body-parser');
+var app = express();
 
 var mobius = require('./MobiusConnector').mobius;
 var keti_mobius = new mobius();
 keti_mobius.set_mobius_info(conf.cse.host, conf.cse.port);
 
-var lightNUM = 2;
+var lightNUM = 5;
+var ipe_port = 4000;
 
 let doorstate
 let doorbatlvl
@@ -20,22 +26,18 @@ let green
 let blue
 let light_bri
 
-function sensortypetonum(sen){
+function typetonum(sen){
     switch (sen){
     case 'temperature':
-        return 2;
+        return 12;
     case 'humidity':
-        return 3;
+        return 13;
     case 'pressure':
-        return 4;
-    case 'lux':
-        return 5;
-    case 'presence':
-        return 6;
+        return 14;
     case 'open':
-        return 7;
+        return 15;
     case 'buttonevent':
-        return 8;
+        return 16;
     }
 }
 
@@ -79,16 +81,16 @@ function xyBriToRgb(cle){
 var ladoorstate = '';
 function fdoorstate() {
     setInterval(function(){
-        doorstate = zigbee.getsensorstate(conf.zigbee.host, sensortypetonum('open'));
+        doorstate = zigbee.getsensorstate(conf.zigbee.host, typetonum('open'));
         if (ladoorstate != doorstate){
             ladoorstate = doorstate;
             if(doorstate == true){
-                zigbee.lighton(conf.zigbee.host, 2);
-                zigbee.changebuttonstate(conf.zigbee.host,sensortypetonum('buttonevent'), true)
+                zigbee.lighton(conf.zigbee.host, lightNUM);
+                zigbee.changebuttonstate(conf.zigbee.host,typetonum('buttonevent'), true)
             }
             if(doorstate == false){
-                zigbee.lightoff(conf.zigbee.host, 2);
-                zigbee.changebuttonstate(conf.zigbee.host,sensortypetonum('buttonevent'), false)
+                zigbee.lightoff(conf.zigbee.host, lightNUM);
+                zigbee.changebuttonstate(conf.zigbee.host,typetonum('buttonevent'), false)
             }
             let cin_path = conf.ae.parent+'/zigbee_smarthome/deviceDoorLock/doorlock';
             let cin_obj = {
@@ -104,7 +106,7 @@ function fdoorstate() {
 var ladoorbatlvl = '';
 function fdoorbat() {
     setInterval(() => {
-        doorbatlvl = zigbee.getsensorbatt(conf.zigbee.host, sensortypetonum('open'));
+        doorbatlvl = zigbee.getsensorbatt(conf.zigbee.host, typetonum('open'));
         if (ladoorbatlvl != doorbatlvl){
             ladoorbatlvl = doorbatlvl;
             let cin_path = conf.ae.parent+'/zigbee_smarthome/deviceDoorLock/battery';
@@ -122,7 +124,7 @@ function fdoorbat() {
 var latemperval = '';
 function ftempval(){
     setInterval(function(){
-        temperval = zigbee.getsensorstate(conf.zigbee.host, sensortypetonum('temperature'));
+        temperval = zigbee.getsensorstate(conf.zigbee.host, typetonum('temperature'));
         if (latemperval != temperval){
             latemperval = temperval;
             let cin_path = conf.ae.parent+'/zigbee_smarthome/deviceThermometer/temperature';
@@ -139,7 +141,7 @@ function ftempval(){
 var latemperbatt = '';
 function ftempbatt(){
     setInterval(function(){
-        temperbatt = zigbee.getsensorbatt(conf.zigbee.host, sensortypetonum('temperature'));
+        temperbatt = zigbee.getsensorbatt(conf.zigbee.host, typetonum('temperature'));
         if (latemperbatt != temperbatt){
             latemperbatt = temperbatt;
             let cin_path = conf.ae.parent+'/zigbee_smarthome/deviceThermometer/battery';
@@ -156,14 +158,14 @@ function ftempbatt(){
 var laswstate='';
 function fswstate() {
     setInterval(function(){
-        swstate = zigbee.getsensorstate(conf.zigbee.host, sensortypetonum('buttonevent'));
+        swstate = zigbee.getsensorstate(conf.zigbee.host, typetonum('buttonevent'));
         if (laswstate != swstate){
             laswstate = swstate;
             if(swstate == true){
-                zigbee.lighton(conf.zigbee.host, 2, true);
+                zigbee.lighton(conf.zigbee.host, lightNUM, true);
             }
             if(swstate == false){
-                zigbee.lightoff(conf.zigbee.host, 2, false);
+                zigbee.lightoff(conf.zigbee.host, lightNUM, false);
             }
             let cin_path = conf.ae.parent+'/zigbee_smarthome/deviceLight/binarySwitch';
             let cin_obj = {
@@ -268,158 +270,155 @@ function init_resource(){
     console.log("ae_resp: " + ae_resp);
     if(ae_resp.code == 201 || ae_resp.code == 409){
         var cnt_parent_path = conf.ae.parent + '/' + conf.ae.name;
-            var deviceDoorLock = {
-                'm2m:fcnt':{
-                    'rn': 'deviceDoorLock',
-                    "cnd": 'org.onem2m.home.device.deviceDoorLock'
+        var deviceDoorLock = {
+            'm2m:fcnt':{
+                'rn': 'deviceDoorLock',
+                "cnd": 'org.onem2m.home.device.deviceDoorLock'
+            }
+        };
+        var cnt_resp = keti_mobius.create_fcnt(cnt_parent_path, deviceDoorLock);
+        if (cnt_resp.code == 201 || cnt_resp.code == 409){
+            var cnt2_parent_path = cnt_parent_path +'/'+ 'deviceDoorLock';
+            let doorlock = {
+                'hd:dooLk':{
+                    'rn': 'doorlock',
+                    'cnd': 'org.onem2m.home.moduleclass.doorlock',
+                    'lock': doorstate
                 }
             };
-            var cnt_resp = keti_mobius.create_fcnt(cnt_parent_path, deviceDoorLock);
-            if (cnt_resp.code == 201 || cnt_resp.code == 409){
-                var cnt2_parent_path = cnt_parent_path +'/'+ 'deviceDoorLock';
-                let doorlock = {
-                    'hd:dooLk':{
-                        'rn': 'doorlock',
-                        'cnd': 'org.onem2m.home.moduleclass.doorlock',
-                        'lock': doorstate
-                    }
-                };
-                let battery = {
-                    'hd:bat':{
-                        'rn' : 'battery',
-                        'cnd': 'org.onem2m.home.moduleclass.battery',
-                        'lvl': doorbatlvl
-                    }
-                };
-                cnt_resp = keti_mobius.create_fcnt(cnt2_parent_path, doorlock);
+            let battery = {
+                'hd:bat':{
+                    'rn' : 'battery',
+                    'cnd': 'org.onem2m.home.moduleclass.battery',
+                    'lvl': doorbatlvl
+                }
+            };
+            cnt_resp = keti_mobius.create_fcnt(cnt2_parent_path, doorlock);
 
-                if( cnt_resp.code == 201 || cnt_resp.code == 409){
-                    cnt_resp = keti_mobius.create_fcnt(cnt2_parent_path, battery);
-                    if( cnt_resp.code == 201 || cnt_resp.code == 409 ){
-                        console.log('deviceDoorLock' + " CNT_Complete!!");
-                    }
+            if( cnt_resp.code == 201 || cnt_resp.code == 409){
+                cnt_resp = keti_mobius.create_fcnt(cnt2_parent_path, battery);
+                if( cnt_resp.code == 201 || cnt_resp.code == 409 ){
+                    console.log('deviceDoorLock' + " CNT_Complete!!");
                 }
             }
-            var deviceThermometer = {
-                'm2m:fcnt':{
-                    'rn': 'deviceThermometer',
-                    "cnd": 'org.onem2m.home.device.deviceThermometer'
+        }
+        var deviceThermometer = {
+            'm2m:fcnt':{
+                'rn': 'deviceThermometer',
+                "cnd": 'org.onem2m.home.device.deviceThermometer'
+            }
+        };
+        var cnt_resp = keti_mobius.create_fcnt(cnt_parent_path, deviceThermometer);
+        if (cnt_resp.code == 201 || cnt_resp.code == 409){
+            var cnt2_parent_path = cnt_parent_path +'/'+ 'deviceThermometer';
+            var temperature = {
+                'hd:tempe':{
+                    'rn': 'temperature',
+                    'cnd': "org.onem2m.home.moduleclass.temperature",
+                    'curT0': temperval
                 }
             };
-            var cnt_resp = keti_mobius.create_fcnt(cnt_parent_path, deviceThermometer);
-            if (cnt_resp.code == 201 || cnt_resp.code == 409){
-                var cnt2_parent_path = cnt_parent_path +'/'+ 'deviceThermometer';
-                var temperature = {
-                    'hd:tempe':{
-                        'rn': 'temperature',
-                        'cnd': "org.onem2m.home.moduleclass.temperature",
-                        'curT0': temperval
-                    }
-                };
-                let battery = {
-                    'hd:bat':{
-                        'rn' : 'battery',
-                        'cnd': 'org.onem2m.home.moduleclass.battery',
-                        'lvl': temperbatt
-                    }
-                };
-                cnt_resp = keti_mobius.create_fcnt(cnt2_parent_path, temperature);
+            let battery = {
+                'hd:bat':{
+                    'rn' : 'battery',
+                    'cnd': 'org.onem2m.home.moduleclass.battery',
+                    'lvl': temperbatt
+                }
+            };
+            cnt_resp = keti_mobius.create_fcnt(cnt2_parent_path, temperature);
 
-                if( cnt_resp.code == 201 || cnt_resp.code == 409){
-                    cnt_resp = keti_mobius.create_fcnt(cnt2_parent_path, battery);
-                    if( cnt_resp.code == 201 || cnt_resp.code == 409 ){
-                        console.log('deviceThermometer' + " CNT_Complete!!");
-                    }
+            if( cnt_resp.code == 201 || cnt_resp.code == 409){
+                cnt_resp = keti_mobius.create_fcnt(cnt2_parent_path, battery);
+                if( cnt_resp.code == 201 || cnt_resp.code == 409 ){
+                    console.log('deviceThermometer' + " CNT_Complete!!");
                 }
             }
-            var deviceThermometer = {
-                'm2m:fcnt':{
-                    'rn': 'deviceLight',
-                    'cnd': 'org.onem2m.home.device.deviceLight'
+        }
+        var deviceThermometer = {
+            'm2m:fcnt':{
+                'rn': 'deviceLight',
+                'cnd': 'org.onem2m.home.device.deviceLight'
+            }
+        };
+        var cnt_resp = keti_mobius.create_fcnt(cnt_parent_path, deviceThermometer);
+        if (cnt_resp.code == 201 || cnt_resp.code == 409){
+            var cnt2_parent_path = cnt_parent_path +'/'+ 'deviceLight';
+            var binarySwitch = {
+                'hd:binSh':{
+                    'rn': "binarySwitch",
+                    'cnd': "org.onem2m.home.moduleclass.binarySwitch",
+                    'powerSe': swstate
                 }
             };
-            var cnt_resp = keti_mobius.create_fcnt(cnt_parent_path, deviceThermometer);
-            if (cnt_resp.code == 201 || cnt_resp.code == 409){
-                var cnt2_parent_path = cnt_parent_path +'/'+ 'deviceLight';
-                var binarySwitch = {
-                    'hd:binSh':{
-                        'rn': "binarySwitch",
-                        'cnd': "org.onem2m.home.moduleclass.binarySwitch",
-                        'powerSe': swstate
-                    }
-                };
-                var faultDetection = {
-                    'hd:fauDn':{
-                        'rn': "faultDetection",
-                        'cnd': "org.onem2m.home.moduleclass.faultDetection",
-                        'sus': light_fault
-                    }
-                };
-                var colourSaturation = {
-                    'hd:colSn':{
-                        'rn': "colourSaturation",
-                        'cnd': "org.onem2m.home.moduleclass.colourSaturation",
-                        'colSn': light_sat
-                    }
-                };
-                var colour = {
-                    'hd:color':{
-                        'rn': "colour",
-                        'cnd': "org.onem2m.home.moduleclass.colour",
-                        'red': xyBriToRgb('red'),
-                        'green': xyBriToRgb('green'),
-                        'blue': xyBriToRgb('blue')
-                    }
-                };
-                var brightness = {
-                    'hd:brigs':{
-                    'rn' : "brightness",
-                    'cnd': "org.onem2m.home.moduleclass.brightness",
-                    'brigs': light_bri
-                    }
-                };
-                cnt_resp = keti_mobius.create_fcnt(cnt2_parent_path, binarySwitch);
-                if( cnt_resp.code == 201 || cnt_resp.code == 409){
-                    cnt_resp = keti_mobius.create_fcnt(cnt2_parent_path, faultDetection);
+            var faultDetection = {
+                'hd:fauDn':{
+                    'rn': "faultDetection",
+                    'cnd': "org.onem2m.home.moduleclass.faultDetection",
+                    'sus': light_fault
+                }
+            };
+            var colourSaturation = {
+                'hd:colSn':{
+                    'rn': "colourSaturation",
+                    'cnd': "org.onem2m.home.moduleclass.colourSaturation",
+                    'colSn': light_sat
+                }
+            };
+            var colour = {
+                'hd:color':{
+                    'rn': "colour",
+                    'cnd': "org.onem2m.home.moduleclass.colour",
+                    'red': xyBriToRgb('red'),
+                    'green': xyBriToRgb('green'),
+                    'blue': xyBriToRgb('blue')
+                }
+            };
+            var brightness = {
+                'hd:brigs':{
+                'rn' : "brightness",
+                'cnd': "org.onem2m.home.moduleclass.brightness",
+                'brigs': light_bri
+                }
+            };
+            cnt_resp = keti_mobius.create_fcnt(cnt2_parent_path, binarySwitch);
+            if( cnt_resp.code == 201 || cnt_resp.code == 409){
+                cnt_resp = keti_mobius.create_fcnt(cnt2_parent_path, faultDetection);
+                if( cnt_resp.code == 201 || cnt_resp.code == 409 ){
+                    cnt_resp = keti_mobius.create_fcnt(cnt2_parent_path, colourSaturation);
                     if( cnt_resp.code == 201 || cnt_resp.code == 409 ){
-                        cnt_resp = keti_mobius.create_fcnt(cnt2_parent_path, colourSaturation);
+                        cnt_resp = keti_mobius.create_fcnt(cnt2_parent_path, colour);
                         if( cnt_resp.code == 201 || cnt_resp.code == 409 ){
-                            cnt_resp = keti_mobius.create_fcnt(cnt2_parent_path, colour);
+                            cnt_resp = keti_mobius.create_fcnt(cnt2_parent_path, brightness);
                             if( cnt_resp.code == 201 || cnt_resp.code == 409 ){
-                                cnt_resp = keti_mobius.create_fcnt(cnt2_parent_path, brightness);
-                                if( cnt_resp.code == 201 || cnt_resp.code == 409 ){
-                                    console.log('deviceLight' + " CNT_Complete!!");
-                                }
+                                console.log('deviceLight' + " CNT_Complete!!");
                             }
                         }
                     }
                 }
             }
+        }
         
-        var sub_ae_parent_path = conf.ae.parent + '/' + conf.ae.name;
-        var sub_body = {nu:['mqtt://' + conf.cse.host +'/'+ conf.ae.id + '?ct=json']};
+        var sub_fcnt_path = conf.ae.parent + '/' + conf.ae.name + '/deviceLight';
+        var sub_body = {nu:['http://' + ipe_ip.address() +':'+ ipe_port + '/' + conf.ae.id + '?ct=json']};
         var sub_obj = {
             'm2m:sub':
             {
-                'rn' : "sub_container_check",
-                'enc': {'net': [4]},
+                'rn' : "sub",
+                'enc': {'net': [1]},
                 'nu' : sub_body.nu,
                 'nct': 2
             }
         };
-        var sub_checker_path = sub_ae_parent_path+'/'+'sub_container_check';
-        var resp_sub = keti_mobius.retrieve_sub(sub_checker_path);
+        var sub_path = sub_fcnt_path+'/'+'sub';
+        var resp_sub = keti_mobius.retrieve_sub(sub_path);
         if (resp_sub.code == 200) {
-            resp_sub = keti_mobius.delete_res(sub_checker_path);
+            resp_sub = keti_mobius.delete_res(sub_path);
             if (resp_sub.code == 200) {
-                resp_sub = keti_mobius.create_sub(sub_ae_parent_path, sub_obj);
+                resp_sub = keti_mobius.create_sub(sub_fcnt_path, sub_obj);
             }
         } 
         else if (resp_sub.code == 404) {
-            keti_mobius.create_sub(sub_ae_parent_path, sub_obj);
-        }
-        else{
-
+            keti_mobius.create_sub(sub_fcnt_path, sub_obj);
         }
     }
 
@@ -435,3 +434,21 @@ function init_resource(){
 }
 
 setTimeout(init_resource,100);
+
+app.use(bodyParser.json());
+app.listen(ipe_port, function () {
+    console.log("AE Notification listening on: " + ipe_ip.address() +':'+ ipe_port);
+});
+
+app.post("/"+conf.ae.id, function (req, res) {
+    console.log(req.body);
+    var req_body = req.body["m2m:sgn"].nev.rep["hd:binSh"].powerSe;
+    console.log("======================="+req_body)
+    if(req_body == true) {
+        zigbee.lighton(conf.zigbee.host, lightNUM, true);
+    }
+    else if(req_body == false) {
+        zigbee.lightoff(conf.zigbee.host, lightNUM, false);
+    }
+    res.sendStatus(200);
+});

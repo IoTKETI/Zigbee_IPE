@@ -80,31 +80,31 @@ exports.getsensorstate = function(zigbeehost, sensorNUM){
         // console.log(status_code);
         var obj = JSON.parse(data);
         obj = obj['state']
-        if (numtosensortype(sensorNUM) == 'temperature'){
+        if (numtotype(sensorNUM) == 'temperature'){
           obj = obj['temperature']
           return obj
         }
-        else if (numtosensortype(sensorNUM) == 'humidity'){
+        else if (numtotype(sensorNUM) == 'humidity'){
           obj = obj['humidity']
           return obj
         }
-        else if (numtosensortype(sensorNUM) == 'pressure'){
+        else if (numtotype(sensorNUM) == 'pressure'){
           obj = obj['pressure']
           return obj
         }
-        else if (numtosensortype(sensorNUM) == 'lux'){
+        else if (numtotype(sensorNUM) == 'lux'){
           obj = obj['lux']
           return obj
         }
-        else if (numtosensortype(sensorNUM) == 'presence'){
+        else if (numtotype(sensorNUM) == 'presence'){
           obj = obj['presence']
           return obj
         }
-        else if (numtosensortype(sensorNUM) == 'open'){
+        else if (numtotype(sensorNUM) == 'open'){
           obj = obj['open']
           return obj
         }
-        else if (numtosensortype(sensorNUM) == 'buttonevent'){
+        else if (numtotype(sensorNUM) == 'buttonevent'){
           obj = obj['buttonevent']
           if (obj == 1002)
             return true
@@ -275,21 +275,17 @@ exports.emergencyalert = function(zigbeehost, lightNUM){
   req.end()
 };
 
-function numtosensortype(sensorty) {
+function numtotype(sensorty) {
   switch (sensorty) {
-    case 2:
+    case 12:
       return 'temperature';
-    case 3:
+    case 13:
       return 'humidity';
-    case 4:
+    case 14:
       return 'pressure';
-    case 5:
-      return 'lux';
-    case 6:
-      return 'presence';
-    case 7:
+    case 15:
       return 'open';
-    case 8:
+    case 16:
       return 'buttonevent';
   }
 }
