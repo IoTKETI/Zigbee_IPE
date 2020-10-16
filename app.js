@@ -92,7 +92,7 @@ function fdoorstate() {
                 zigbee.lightoff(conf.zigbee.host, lightNUM);
                 zigbee.changebuttonstate(conf.zigbee.host,typetonum('buttonevent'), false)
             }
-            let cin_path = conf.ae.parent+'/zigbee_smarthome/deviceDoorLock/doorlock';
+            let cin_path = conf.ae.parent+'/'+conf.ae.name+'/deviceDoorLock/doorlock';
             let cin_obj = {
                 "hd:dooLk": {
                     "lock": doorstate
@@ -109,7 +109,7 @@ function fdoorbat() {
         doorbatlvl = zigbee.getsensorbatt(conf.zigbee.host, typetonum('open'));
         if (ladoorbatlvl != doorbatlvl){
             ladoorbatlvl = doorbatlvl;
-            let cin_path = conf.ae.parent+'/zigbee_smarthome/deviceDoorLock/battery';
+            let cin_path = conf.ae.parent+'/'+conf.ae.name+'/deviceDoorLock/battery';
             let cin_obj = {
                 "hd:bat": {
                     "lvl": doorbatlvl
@@ -127,7 +127,7 @@ function ftempval(){
         temperval = zigbee.getsensorstate(conf.zigbee.host, typetonum('temperature'));
         if (latemperval != temperval){
             latemperval = temperval;
-            let cin_path = conf.ae.parent+'/zigbee_smarthome/deviceThermometer/temperature';
+            let cin_path = conf.ae.parent+'/'+conf.ae.name+'/deviceThermometer/temperature';
             let cin_obj = {
                 "hd:tempe": {
                     "curT0": temperval
@@ -144,7 +144,7 @@ function ftempbatt(){
         temperbatt = zigbee.getsensorbatt(conf.zigbee.host, typetonum('temperature'));
         if (latemperbatt != temperbatt){
             latemperbatt = temperbatt;
-            let cin_path = conf.ae.parent+'/zigbee_smarthome/deviceThermometer/battery';
+            let cin_path = conf.ae.parent+'/'+conf.ae.name+'/deviceThermometer/battery';
             let cin_obj = {
                 "hd:bat": {
                     "lvl": temperbatt
@@ -167,7 +167,7 @@ function fswstate() {
             if(swstate == false){
                 zigbee.lightoff(conf.zigbee.host, lightNUM, false);
             }
-            let cin_path = conf.ae.parent+'/zigbee_smarthome/deviceLight/binarySwitch';
+            let cin_path = conf.ae.parent+'/'+conf.ae.name+'/deviceLight/binarySwitch';
             let cin_obj = {
                 'hd:binSh':{
                     'powerSe': swstate
@@ -184,7 +184,7 @@ function flight_fault() {
         light_fault = zigbee.findlight(conf.zigbee.host, lightNUM, 'reachable');
         if (lalight_fault != light_fault){
             lalight_fault = light_fault;
-            let cin_path = conf.ae.parent+'/zigbee_smarthome/deviceLight/faultDetection';
+            let cin_path = conf.ae.parent+'/'+conf.ae.name+'/deviceLight/faultDetection';
             let cin_obj = {
                 'hd:fauDn':{
                     'sus': light_fault
@@ -201,7 +201,7 @@ function flight_sat() {
         light_sat =  zigbee.findlight(conf.zigbee.host, lightNUM, 'sat');
         if (lalight_sat != light_sat){
             lalight_sat = light_sat;
-            let cin_path = conf.ae.parent+'/zigbee_smarthome/deviceLight/colourSaturation';
+            let cin_path = conf.ae.parent+'/'+conf.ae.name+'/deviceLight/colourSaturation';
             let cin_obj = {
                 'hd:colSn':{
                     'colSn': light_sat
@@ -224,7 +224,7 @@ function flight_rgb() {
             lared = red;
             lagreen = green;
             lablue = blue;
-            let cin_path = conf.ae.parent+'/zigbee_smarthome/deviceLight/colour';
+            let cin_path = conf.ae.parent+'/'+conf.ae.name+'/deviceLight/colour';
             let cin_obj = {
                 'hd:color':{
                     'red': red,
@@ -243,7 +243,7 @@ function flight_bri() {
         light_bri = zigbee.findlight(conf.zigbee.host, lightNUM, 'bri')
         if (lalight_bri != light_bri){
             lalight_bri = light_bri;
-            let cin_path = conf.ae.parent+'/zigbee_smarthome/deviceLight/colourSaturation';
+            let cin_path = conf.ae.parent+'/'+conf.ae.name+'/deviceLight/colourSaturation';
             let cin_obj = {
                 'hd:brigs':{
                     'brigs': light_bri

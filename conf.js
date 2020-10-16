@@ -18,7 +18,7 @@ ae.parent = "/" + cse.name;
 ae.appid = "zigbee"
 
 zigbee.host = "192.168.0.6"
-zigbee.api_key = "16C4BC05B6"
+zigbee.api_key = "708AAC8167"
 
 conf.cse = cse;
 conf.ae = ae;
