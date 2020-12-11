@@ -4,11 +4,12 @@
 1.0.0
 
 ## Introduction
-The Zigbee IPE transfer the data to oneM2M-based platform from the Zigbee gateway 
+The Zigbee IPE provides interworking between oneM2M system and Zigbee networks.
+The web tutorial is available at the oneM2M youtube channel: https://youtu.be/oq30NPDsMv8
 
 ## Installation
 - Open the Zigbee_IPE source home directory
-- Install dependent libraries as below
+- Install the dependent libraries as below
 ```
  npm install
  
