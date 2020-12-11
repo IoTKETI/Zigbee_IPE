@@ -1,11 +1,11 @@
 # Zigbee_IPE
 
 ## version 
-1.0.0
+v1.0.0
 
 ## Introduction
-The Zigbee IPE provides interworking between oneM2M system and Zigbee networks.
-The web tutorial is available at the oneM2M youtube channel: https://youtu.be/oq30NPDsMv8
+- The Zigbee IPE provides interworking between oneM2M system and Zigbee networks.
+- The web tutorial is available at the oneM2M youtube channel: https://youtu.be/oq30NPDsMv8
 
 ## Installation
 - Open the Zigbee_IPE source home directory
@@ -15,7 +15,7 @@ The web tutorial is available at the oneM2M youtube channel: https://youtu.be/oq
  
 ```
 ## Configuration
-- Modify the "conf.js" file to your personal preferences
+- Modify the 'conf.js' file to your personal preferences
 ```
  
 let conf = {};
@@ -50,7 +50,7 @@ module.exports = conf;
  
 ```
 ## Configuration your device
-- Modify the "app.js"&"ZigbeeIPE.js" file to your personal device ID
+- Modify the 'app.js' and 'ZigbeeIPE.js' file with your personal device IDs
 ```
 //app.js
 function typetonum(sen){
@@ -82,7 +82,7 @@ function numtotype(sensorty) {
 
 ```
 ## Running
-IPE can be executed with the following command
+Run the 'app.js' file as below
 ```
 node app.js
 ```
