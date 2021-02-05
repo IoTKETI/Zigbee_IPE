@@ -1,0 +1,60 @@
+{
+    "doorlock": {
+        "hd:dooLk": {
+            "rn": "doorlock",
+            "cnd": "org.onem2m.home.moduleclass.doorlock",
+            "lock" :true
+        }
+    },
+    "battery": {
+        "hd:bat": {
+            "rn": "battery",
+            "cnd": "org.onem2m.home.moduleclass.battery",
+            "lvl": 100
+        }          
+    },
+    "temperature": {
+        "hd:tempe": {
+            "rn": "temperature",
+            "cnd": "org.onem2m.home.moduleclass.temperature",
+            "curT0": 3870
+        }
+    },
+    "binarySwitch": {
+        "hd:binSh": {
+            "rn": "Switch",
+            "cnd": "org.onem2m.home.moduleclass.binarySwitch",
+            "powerSe": true
+        }    
+    },
+    "faultDetection": {
+        "hd:fauDn": {
+            "rn": "faultDetection",
+            "cnd": "org.onem2m.home.moduleclass.faultDetection",
+            "sus": true
+        }    
+    },
+    "colourSaturation": {
+        "hd:colSn": {
+            "rn": "colourSaturation",
+            "cnd": "org.onem2m.home.moduleclass.colourSaturation",
+            "colSn": 0
+        }
+    },
+    "colour":{
+        "hd:color": {
+            "rn": "colour",
+            "cnd": "org.onem2m.home.moduleclass.colour",
+            "green": 0,
+            "red": 0,
+            "blue": 0
+        }
+    },
+    "brightness": {
+        "hd:brigs": {
+            "rn": "brightness",
+            "cnd": "org.onem2m.home.moduleclass.brightness",
+            "brigs": 100
+        }     
+    }
+}

@@ -1,14 +1,13 @@
 var http = require("http");
+global.conf = require('./conf.js');
 
-// hosturl = '192.168.0.6'
 var data = JSON.stringify(
   {
     "devicetype": "my applcation",
   }
 )
 var options = {
-  hostname: '192.168.0.6',
-  port: 80,
+  hostname: conf.zigbee.host,
   path: '/api',
   method: 'POST',
   headers: {

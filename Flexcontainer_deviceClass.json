@@ -1,0 +1,20 @@
+{
+    "deviceDoorLock": {
+        "hd:deDLk": {
+            "rn": "deviceDoorLock",
+            "cnd": "org.onem2m.home.device.deviceDoorLock"
+        }
+    },
+    "deviceThermometer": {
+        "hd:devTr": {
+            "rn": "deviceThermometer",
+            "cnd": "org.onem2m.home.device.deviceThermometer"
+        }          
+    },
+    "deviceLight": {
+        "hd:devLt": {
+            "rn": "deviceLight",
+            "cnd": "org.onem2m.home.device.deviceLight"
+        }
+    }
+}

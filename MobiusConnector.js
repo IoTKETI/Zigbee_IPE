@@ -273,7 +273,7 @@ exports.mobius = function () {
         req.end();
     };
 
-    this.create_fcnt = function (path, cnt) {
+    this.create_cnt = function (path, cnt) {
 
         var url = 'http://' + server_ip + ':' + server_port + path;
 
@@ -335,7 +335,7 @@ exports.mobius = function () {
         return data;
     };
 
-    this.create_fcin = function (path, cin) {
+    this.put_fcnt = function (path, cin) {
 
         var url = 'http://' + server_ip + ':' + server_port + path;
 

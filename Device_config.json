@@ -1,0 +1,22 @@
+{
+    "2": {
+        "type": "ZHATemperature",
+        "config": ["battery"],
+        "state": ["temperature"],
+        "subscription": false,
+        "linked": "deviceThermometer"
+    },
+    "5": {
+        "type": "ZHASwitch",
+        "state": ["buttonevent"],
+        "subscription": true,
+        "linked": "deviceLight"
+    },
+    "7": {
+        "type": "ZHAOpenClose",
+        "config": ["battery"],
+        "state": ["open"],
+        "subscription": false,
+        "linked": "deviceDoorlock"
+    }
+}

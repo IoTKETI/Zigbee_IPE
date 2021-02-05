@@ -1,0 +1,20 @@
+{
+    "1":{
+        "deviceClass":"deviceDoorlock",
+        "resourcename": "deviceDoorlock",
+        "devicecnd": "org.onem2m.home.device.deviceDoorLock",
+        "moduleClass": ["doorlock", "battery"]
+    },
+    "2":{
+        "deviceClass":"deviceThermometer",
+        "resourcename": "deviceThermometer",
+        "devicecnd": "org.onem2m.home.device.deviceThermometer",
+        "moduleClass": ["temperature", "battery"]
+    },
+    "3":{
+        "deviceClass":"deviceLight",
+        "resourcename": "deviceLight",
+        "devicecnd": "org.onem2m.home.device.deviceLight",
+        "moduleClass": ["binarySwitch", "faultDetection", "colourSaturation", "colour", "brightness"]
+    }
+}
