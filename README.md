@@ -15,71 +15,141 @@ v1.0.0
  
 ```
 ## Configuration
-- Modify the 'conf.js' file to your personal preferences
+- Modify the 'IPE_configuration.json' file to your personal preferences
+- This is sample
 ```
- 
-let conf = {};
-let cse = {};
-let ae = {};
-let zigbee = {};
-let api_key = {};
-
-//cse config
-cse.host = "127.0.0.1";
-cse.port = "7579"
-cse.name = "Mobius"
-cse.id = "/Mobius.js"
-cse.mqttport = "1883";
-
-//ae config
-ae.name = "zigbee_smarthome";
-ae.id = "S" + ae.name;
-ae.parent = "/" + cse.name;
-ae.appid = "zigbee"
-
-zigbee.host = "192.168.0.122"
-zigbee.api_key = "9BBE38D704"
-
-conf.cse = cse;
-conf.ae = ae;
-conf.zigbee = zigbee;
-conf.api_key = api_key;
-
-module.exports = conf;
-
- 
-```
-## Configuration your device
-- Modify the 'app.js' and 'ZigbeeIPE.js' file with your personal device IDs
-```
-//app.js
-function typetonum(sen){
-    switch (sen){
-    case 'temperature':
-        return 2;
-    case 'humidity':
-        return 3;
-    case 'pressure':
-        return 4;
-    case 'buttonevent':
-        return 5;
+{
+    "hostingCSE": {
+        "ip": "127.0.0.1",
+        "port": 7579,
+        "resourceName": "Mobius",
+        "id": "/Mobius",
+        "mqttPort": 1883
+    },
+    "ipe": {
+        "resourceName": "zigbee_smarthome",
+        "id": "Szigbee_smarthome",
+        "appid": "zigbee",
+        "notiPort": 4000
+    },
+    "zigbeeGateway": {
+        "ip": "192.168.0.122",
+        "apiKey": "9BBE38D704",
+        "sensingInterval": 1000
     }
 }
-
-//ZigbeeIPE.js
-function numtotype(sensorty) {
-  switch (sensorty) {
-    case 2:
-      return 'temperature';
-    case 3:
-      return 'humidity';
-    case 4:
-      return 'pressure';
-    case 5:
-      return 'buttonevent';
-  }
+```
+- Modify the 'Resource_configuration.json' file to your personal device compose
+- This is sample
+```
+{
+    "device": [
+        {
+            "deconzId": "2",
+            "deconzResource": {
+                "type": "ZHATemperature",
+                "battery": true,
+                "state": [
+                    "temperature"
+                ]
+            },
+            "oneM2MResource": {
+                "deviceclass": "deviceThermometer",
+                "deviceResourceName": "Thermometer",
+                "moduleclass": [
+                    "temperature",
+                    "battery"
+                ]
+            }
+        },
+        {
+            "deconzId": "5",
+            "deconzResource": {
+                "type": "ZHASwitch",
+                "battery": false,
+                "state": [
+                    "buttonevent"
+                ]
+            },
+            "oneM2MResource": {
+                "deviceclass": "deviceSwitch",
+                "deviceResourceName": "LightSwitch",
+                "moduleclass": [
+                    "binarySwitch"
+                ]
+            }
+        },
+        {
+            "deconzId": "7",
+            "deconzResource": {
+                "type": "ZHAOpenClose",
+                "battery": true,
+                "state": [
+                    "open"
+                ]
+            },
+            "oneM2MResource": {
+                "deviceclass": "deviceDoorlock",
+                "deviceResourceName": "doorlock",
+                "moduleclass": [
+                    "doorlock",
+                    "battery"
+                ]
+            }
+        }
+    ],
+    "bulb": [
+        {
+            "deconzId": "2",
+            "deconzResource": {
+                "state": [
+                    "bri",
+                    "sat",
+                    "reachable",
+                    "on",
+                    "xy"
+                ]
+            },
+            "oneM2MResource": {
+                "deviceclass": "deviceLight",
+                "deviceResourceName": "Bulb1",
+                "moduleclass": [
+                    "binarySwitch",
+                    "faultDetection",
+                    "colourSaturation",
+                    "colour",
+                    "brightness"
+                ],
+                "subscribed_moduleclass": [
+                    "binarySwitch"
+                ]
+            }
+        }
+    ]
 }
+```
+## Configuration your device
+- Modify the 'Notification.js' file with your personal notification setting
+```
+notification.post("/" + AE_ID, function (req, res) {
+    console.log("$..req.body: \n" + JSON.stringify(req.body, null, 2));
+    let req_body = req.body;
+    let str = JSONPath("$..sur", req_body);
+    let sub_deviceResourceName = str[0].split("/");
+    let command = JSONPath("$..powerSe", req_body)[0]; // Attribute value you need to find (Ex. binarySwitch -> powerSe)
+    console.log("=======================\n" + "User command: " + command);
 
+    if (sub_deviceResourceName[2] == "Bulb1") { // Target device you want to control      
+        if(command == true) {  // The actions when you get notification
+            deconz.lighton(GATEWAY_IP, 2);
+            res.sendStatus(200);
+        }
+        else if(command == false) {
+            deconz.lightoff(GATEWAY_IP, 2);
+            res.sendStatus(200);
+        }
+    }
+});
 ```
 ## Running
 Run the 'app.js' file as below
