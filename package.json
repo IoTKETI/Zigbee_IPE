@@ -1,0 +1,24 @@
+{
+  "name": "zigbee_ipe",
+  "version": "1.0.0",
+  "description": "mobius_zigbee_ipe",
+  "main": "zigbee_adn.js",
+  "scripts": {
+    "test": "http"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "fs": "0.0.1-security",
+    "http": "0.0.1-security",
+    "ip": "^1.1.5",
+    "jsonfile": "^6.1.0",
+    "jsonpath-plus": "^4.0.0",
+    "request": "^2.88.2",
+    "sync-request": "^6.1.0",
+    "uuidv1": "^1.6.14"
+  },
+  "devDependencies": {}
+}

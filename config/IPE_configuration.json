@@ -1,0 +1,20 @@
+{
+    "hostingCSE": {
+        "ip": "127.0.0.1",
+        "port": 7579,
+        "resourceName": "Mobius",
+        "id": "/Mobius",
+        "mqttPort": 1883
+    },
+    "ipe": {
+        "resourceName": "zigbee_smarthome",
+        "id": "Szigbee_smarthome",
+        "appid": "zigbee",
+        "notiPort": 4000
+    },
+    "zigbeeGateway": {
+        "ip": "192.168.0.122",
+        "apiKey": "9BBE38D704",
+        "sensingInterval": 1000
+    }
+}
