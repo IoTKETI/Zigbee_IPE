@@ -24,13 +24,13 @@ notification.post("/" + AE_ID, function (req, res) {
     let command = JSONPath("$..powerSe", req_body)[0]; // Attribute value you need to find (Ex. binarySwitch -> powerSe)
     console.log("=======================\n" + "User command: " + command);
 
-    if (sub_deviceResourceName[2] == "Bulb1") { // Target device you want to control      
+    if (sub_deviceResourceName[2] == "Bulb") { // Target device you want to control
         if(command == true) {  // The actions when you get notification
-            deconz.lighton(GATEWAY_IP, 2);
+            deconz.lighton(GATEWAY_IP, 1);  // lighton(GATEWAY_IP, lightNUM)
             res.sendStatus(200);
         }
         else if(command == false) {
-            deconz.lightoff(GATEWAY_IP, 2);
+            deconz.lightoff(GATEWAY_IP, 1);
             res.sendStatus(200);
         }
     }
