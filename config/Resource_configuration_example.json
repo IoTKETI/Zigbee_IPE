@@ -1,0 +1,85 @@
+{
+    "device": [
+        {
+            "deconzId": "2",
+            "deconzResource": {
+                "type": "ZHATemperature",
+                "battery": true,
+                "state": [
+                    "temperature"
+                ]
+            },
+            "oneM2MResource": {
+                "deviceclass": "deviceThermometer",
+                "deviceResourceName": "Thermometer",
+                "moduleclass": [
+                    "temperature",
+                    "battery"
+                ]
+            }
+        },
+        {
+            "deconzId": "5",
+            "deconzResource": {
+                "type": "ZHASwitch",
+                "battery": false,
+                "state": [
+                    "buttonevent"
+                ]
+            },
+            "oneM2MResource": {
+                "deviceclass": "deviceSwitch",
+                "deviceResourceName": "LightSwitch",
+                "moduleclass": [
+                    "binarySwitch"
+                ]
+            }
+        },
+        {
+            "deconzId": "7",
+            "deconzResource": {
+                "type": "ZHAOpenClose",
+                "battery": true,
+                "state": [
+                    "open"
+                ]
+            },
+            "oneM2MResource": {
+                "deviceclass": "deviceDoorlock",
+                "deviceResourceName": "doorlock",
+                "moduleclass": [
+                    "doorlock",
+                    "battery"
+                ]
+            }
+        }
+    ],
+    "bulb": [
+        {
+            "deconzId": "2",
+            "deconzResource": {
+                "state": [
+                    "bri",
+                    "sat",
+                    "reachable",
+                    "on",
+                    "xy"
+                ]
+            },
+            "oneM2MResource": {
+                "deviceclass": "deviceLight",
+                "deviceResourceName": "Bulb1",
+                "moduleclass": [
+                    "binarySwitch",
+                    "faultDetection",
+                    "colourSaturation",
+                    "colour",
+                    "brightness"
+                ],
+                "subscribed_moduleclass": [
+                    "binarySwitch"
+                ]
+            }
+        }
+    ]
+}
